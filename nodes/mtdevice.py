@@ -568,6 +568,19 @@ class MTDevice(object):
 			else:
 				raise MTException("unknown packet: 0x%04X."%data_id)
 			return o
+        # DML Extension for GNSS
+		def parse_status(data_id, content, ffmt):
+			o = {}
+			if (data_id&0x00F0) == 0x10:	# Status Byte
+				o['StatusByte'], = struct.unpack("!B", content)
+			elif (data_id&0x00F0) == 0x20:	# Status Word
+				o['StatusWord'], = struct.unpack("!L", content)
+			elif (data_id&0x00F0) == 0x40:	# RSSI
+				o['RSSI'], = struct.unpack("!b", content)
+			else:
+				raise MTException("unknown packet: 0x%04X."%data_id)
+			return o
+
 
 		# data object
 		output = {}
@@ -610,6 +623,8 @@ class MTDevice(object):
 					output['Velocity'] = parse_velocity(data_id, content, ffmt)
 				elif group == XDIGroup.Status:
 					output['Status'] = parse_status(data_id, content, ffmt)
+				elif group == XDIGroup.Gnss:
+					output['GNSS'] = parse_status(data_id, content, ffmt)
 				else:
 					raise MTException("unknown XDI group: 0x%04X."%group)
 			except struct.error, e:
@@ -740,9 +755,11 @@ class MTDevice(object):
 ################################################################
 def find_devices():
 	mtdev_list = []
-	for port in glob.glob("/dev/tty*S*"):
+	for port in glob.glob("/dev/ttyUS*"):
 		try:
-			br = find_baudrate(port)
+			#br = find_baudrate(port)
+			print "PORT = " +port
+			br = 115200
 			if br:
 				mtdev_list.append((port, br))
 		except MTException:
