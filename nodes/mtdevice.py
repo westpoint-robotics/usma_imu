@@ -16,7 +16,7 @@ verbose = False
 class MTDevice(object):
 	"""XSens MT device communication object."""
 
-	def __init__(self, port, baudrate=115200, timeout=0.002, autoconf=True,
+	def __init__(self, port, baudrate=115200, timeout=0.1, autoconf=True, #Original Timeout is 0.002
 			config_mode=False):
 		"""Open device."""
 		## serial interface to the device
@@ -389,13 +389,14 @@ class MTDevice(object):
 		mid, data = self.read_msg()
 		if mid==MID.MTData:
 			return self.parse_MTData(data, mode, settings)
-		elif mid==MID.MTData2:
+		elif mid==MID.MTData2:    #if 0x36
 			return self.parse_MTData2(data)
 		else:
 			raise MTException("unknown data message: mid=0x%02X (%s)."%	(mid, getMIDName(mid)))
 
 	## Parse a new MTData2 message
 	def parse_MTData2(self, data):
+		#print "MT2: Got data data bytes: [%s]"%(' '.join("%02X"% ord(v) for v in data))
 		# Functions to parse each type of packet
 		def parse_temperature(data_id, content, ffmt):
 			o = {}
@@ -484,6 +485,7 @@ class MTDevice(object):
 				o['gyrX'], o['gyrY'], o['gyrZ'] = \
 						struct.unpack('!'+3*ffmt, content)
 			elif (data_id&0x00F0) == 0x30:	# Delta Q
+				print "Found ang velocity --------"
 				o['Delta q0'], o['Delta q1'], o['Delta q2'], o['Delta q3'] = \
 						struct.unpack('!'+4*ffmt, content)
 			else:
@@ -568,25 +570,36 @@ class MTDevice(object):
 			else:
 				raise MTException("unknown packet: 0x%04X."%data_id)
 			return o
-        # DML Extension for GNSS
-		def parse_status(data_id, content, ffmt):
+        # DML Extension for GNSS==========================================
+		def parse_GNSS(data_id, content, ffmt):
 			o = {}
-			if (data_id&0x00F0) == 0x10:	# Status Byte
-				o['StatusByte'], = struct.unpack("!B", content)
-			elif (data_id&0x00F0) == 0x20:	# Status Word
-				o['StatusWord'], = struct.unpack("!L", content)
-			elif (data_id&0x00F0) == 0x40:	# RSSI
-				o['RSSI'], = struct.unpack("!b", content)
+			if (data_id&0x00F0) == 0x10:	# PVT
+				# Unpack the byte stream IAW the API documenation
+				o['ITOW'], o['year'], o['month'], o['day'], o['hour'], \
+				o['min'], o['sec'], o['valid'], o['tAcc'], o['nano'], \
+				o['gpsFix'], o['flags'], o['numSV'], reserv1, lon, \
+				lat, o['altEllipsoid'], o['altMSL'], o['Hacc'], o['Vacc'], \
+				o['Vel_N'], o['Vel_E'], o['Vel_D'], o['gspeed'], headMotRaw, \
+				o['Sacc'], o['Hacc'], headVehRaw, gdop, pdop, \
+				tdop, vdop, hdop, ndop, edop = \
+				struct.unpack('!IHBBBBBBIiBBBBiiiiIIiiiiiIIiHHHHHHH',content)
+
+				# Apply scaling to the data elements that require it 
+				headMot,headVeh=0.00001*headMotRaw,0.00001*headVehRaw
+				o['Lat'], o['Lon']=0.0000001*lat,0.0000001*lon
+				o['gDOP'], o['pDOP'], o['tDOP'], o['vDOP'], o['hDOP'], \
+				o['nDOP'], o['eDOP'] = 0.01*gdop, 0.01*pdop, 0.01*tdop, \
+				0.01*vdop, 0.01*hdop, 0.01*ndop, 0.01*edop	
+				#print "Output inside parser: ",o		
 			else:
 				raise MTException("unknown packet: 0x%04X."%data_id)
 			return o
-
-
 		# data object
 		output = {}
 		while data:
 			try:
-				data_id, size = struct.unpack('!HB', data[:3])
+				data_id, size = struct.unpack('!HB', data[:3]) #unpack BigEndian UShort2 and UCar1 [start:end:increment]
+				#print hex(data_id),size,':',
 				if (data_id&0x0003) == 0x3:
 					float_format = 'd'
 				elif (data_id&0x0003) == 0x0:
@@ -597,34 +610,35 @@ class MTDevice(object):
 				data = data[3+size:]
 				group = data_id&0xFF00
 				ffmt = float_format
-				if group == XDIGroup.Temperature:
+				if group == XDIGroup.Temperature: #0x0800
 					output['Temperature'] = parse_temperature(data_id, content, ffmt)
-				elif group == XDIGroup.Timestamp:
+				elif group == XDIGroup.Timestamp: #0x1000
 					output['Timestamp'] = parse_timestamp(data_id, content, ffmt)
-				elif group == XDIGroup.OrientationData:
+				elif group == XDIGroup.OrientationData: #0x2000
 					output['Orientation Data'] = parse_orientation_data(data_id, content, ffmt)
-				elif group == XDIGroup.Pressure:
+				elif group == XDIGroup.Pressure: # 0x3000
 					output['Pressure'] = parse_pressure(data_id, content, ffmt)
-				elif group == XDIGroup.Acceleration:
+				elif group == XDIGroup.Acceleration: # 0x4000
 					output['Acceleration'] = parse_acceleration(data_id, content, ffmt)
-				elif group == XDIGroup.Position:
+				elif group == XDIGroup.Position: # 0x5000
 					output['Position'] = parse_position(data_id, content, ffmt)
-				elif group == XDIGroup.AngularVelocity:
+				elif group == XDIGroup.AngularVelocity: # 0x8000
 					output['Angular Velocity'] = parse_angular_velocity(data_id, content, ffmt)
-				elif group == XDIGroup.GPS:
+				elif group == XDIGroup.GPS: # 0x8800
 					output['GPS'] = parse_GPS(data_id, content, ffmt)
-				elif group == XDIGroup.SensorComponentReadout:
+				elif group == XDIGroup.SensorComponentReadout: # 0xA000
 					output['SCR'] = parse_SCR(data_id, content, ffmt)
-				elif group == XDIGroup.AnalogIn:
+				elif group == XDIGroup.AnalogIn: # 0xB000
 					output['Analog In'] = parse_analog_in(data_id, content, ffmt)
-				elif group == XDIGroup.Magnetic:
+				elif group == XDIGroup.Magnetic: # 0xC000
 					output['Magnetic'] = parse_magnetic(data_id, content, ffmt)
-				elif group == XDIGroup.Velocity:
+				elif group == XDIGroup.Velocity: # 0xD000
 					output['Velocity'] = parse_velocity(data_id, content, ffmt)
-				elif group == XDIGroup.Status:
+				elif group == XDIGroup.Status: # 0xE000
 					output['Status'] = parse_status(data_id, content, ffmt)
-				elif group == XDIGroup.Gnss:
-					output['GNSS'] = parse_status(data_id, content, ffmt)
+				elif group == XDIGroup.GNSS: #0x7000
+					output['GNSS'] = parse_GNSS(data_id, content, ffmt)
+					#print output['GNSS']
 				else:
 					raise MTException("unknown XDI group: 0x%04X."%group)
 			except struct.error, e:

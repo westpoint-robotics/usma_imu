@@ -440,6 +440,42 @@ class XSensDriver(object):
 			'''Catch 'Sample' MTData blocks.'''
 			rospy.logdebug("Got MTi data packet: 'Sample', ignored!")
 
+		# DML Extension to publish data from PVT
+		def fill_from_GNSS(o):
+			'''Fill messages with information from 'PVT' MTData2 block.'''
+			try:	# DOP
+				self.xgps_msg.gdop = o['gDOP']
+				self.xgps_msg.pdop = o['pDOP']
+				self.xgps_msg.hdop = o['hDOP']
+				self.xgps_msg.vdop = o['vDOP']
+				self.xgps_msg.tdop = o['tDOP']
+				if (o['gpsFix'] == 3):
+					self.xgps_msg.status.status=self.gps_msg.status.status = 0
+				else:
+					self.xgps_msg.status.status=self.gps_msg.status.status = -1
+				self.xgps_msg.status.satellites_used=self.gps_msg.status.service = o['numSV']
+				self.xgps_msg.latitude = self.gps_msg.latitude = o['Lat']
+				self.xgps_msg.longitude = self.gps_msg.longitude = o['Lon']
+				self.xgps_msg.altitude = self.gps_msg.altitude = o['altMSL']
+				self.xgps_msg.speed = o['gspeed']
+				self.pub_gps = True
+			except KeyError:
+				print "KEYYYYY ERRRROR1"
+				pass
+			try:	# Time UTC
+				y, m, d, hr, mi, s, ns, f = o['year'], o['month'], o['day'],\
+						o['hour'], o['min'], o['sec'], o['nano'], o['valid']
+				if f&0x4:
+					secs = time.mktime((y, m, d, hr, mi, s, 0, 0, 0))
+					# TODO FIX Use the time stamp from the GPS. 					
+					#self.h.stamp.secs = secs # Creating INteger of Range for I format code error
+					#self.h.stamp.nsecs = ns
+					self.h.stamp = rospy.Time.now()
+					
+			except KeyError:
+				print "KEYYYYY ERRRROR2"
+				pass
+
 		def find_handler_name(name):
 			return "fill_from_%s"%(name.replace(" ", "_"))
 
