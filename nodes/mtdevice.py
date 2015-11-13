@@ -482,10 +482,10 @@ class MTDevice(object):
 			o = {}
 			# FIXME is it really 802y and 803y as in the doc?
 			if (data_id&0x00F0) == 0x20:	# Rate of Turn
+
 				o['gyrX'], o['gyrY'], o['gyrZ'] = \
 						struct.unpack('!'+3*ffmt, content)
 			elif (data_id&0x00F0) == 0x30:	# Delta Q
-				print "Found ang velocity --------"
 				o['Delta q0'], o['Delta q1'], o['Delta q2'], o['Delta q3'] = \
 						struct.unpack('!'+4*ffmt, content)
 			else:
@@ -573,7 +573,7 @@ class MTDevice(object):
         # DML Extension for GNSS==========================================
 		def parse_GNSS(data_id, content, ffmt):
 			o = {}
-			if (data_id&0x00F0) == 0x10:	# PVT
+			if (data_id&0x00F0) == 0x10:	# XDI_GnssPvtData
 				# Unpack the byte stream IAW the API documenation
 				o['ITOW'], o['year'], o['month'], o['day'], o['hour'], \
 				o['min'], o['sec'], o['valid'], o['tAcc'], o['nano'], \
@@ -590,7 +590,16 @@ class MTDevice(object):
 				o['gDOP'], o['pDOP'], o['tDOP'], o['vDOP'], o['hDOP'], \
 				o['nDOP'], o['eDOP'] = 0.01*gdop, 0.01*pdop, 0.01*tdop, \
 				0.01*vdop, 0.01*hdop, 0.01*ndop, 0.01*edop	
-				#print "Output inside parser: ",o		
+			elif (data_id&0x00F0) == 0x20:	# XDI_GnssSatInfo: SV Info
+				# Unpack the byte stream IAW the API documenation
+				o['iTOW'], o['numCh'] = struct.unpack('!LBxxx', content[:8])
+				channels = []
+				ch = {}
+				for i in range(o['numCh']):
+					ch['gnssId'], ch['svid'], ch['cno'], ch['flags'] = \
+							struct.unpack('!BBBB', content[8+4*i:12+4*i])
+					channels.append(ch)
+				o['channels'] = channels	
 			else:
 				raise MTException("unknown packet: 0x%04X."%data_id)
 			return o

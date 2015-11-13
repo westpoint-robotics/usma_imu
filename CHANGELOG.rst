@@ -1,6 +1,10 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Changelog for package xsens_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(2015-10-12)
+* Added the abilit to parse XDI_GnssPvtData 
+* Added the abilit to parse XDI_GnssSatInfo 
+
 
 1.0.3 (2014-05-14)
 ------------------

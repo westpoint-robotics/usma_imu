@@ -441,6 +441,7 @@ class XSensDriver(object):
 			rospy.logdebug("Got MTi data packet: 'Sample', ignored!")
 
 		# DML Extension to publish data from PVT
+		# TODO FIX to parse Satellite information from XDI_GnssSatInfo: SV Info
 		def fill_from_GNSS(o):
 			'''Fill messages with information from 'PVT' MTData2 block.'''
 			try:	# DOP
@@ -460,7 +461,6 @@ class XSensDriver(object):
 				self.xgps_msg.speed = o['gspeed']
 				self.pub_gps = True
 			except KeyError:
-				print "KEYYYYY ERRRROR1"
 				pass
 			try:	# Time UTC
 				y, m, d, hr, mi, s, ns, f = o['year'], o['month'], o['day'],\
@@ -473,7 +473,6 @@ class XSensDriver(object):
 					self.h.stamp = rospy.Time.now()
 					
 			except KeyError:
-				print "KEYYYYY ERRRROR2"
 				pass
 
 		def find_handler_name(name):
