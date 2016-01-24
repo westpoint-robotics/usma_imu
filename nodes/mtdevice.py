@@ -28,15 +28,23 @@ class MTDevice(object):
 		self.timeout = 100*timeout
 		if autoconf:
 			self.auto_config()
+			print "MODE:"
+			print self.mode
+			print "SETTINGS:"
+			print self.settings
+			print "LENGTH:"
+			print self.length
+			print "HEADER:"
+			print self.header
 		else:
 			## mode parameter of the IMU
-			self.mode = None
+			self.mode = 2055
 			## settings parameter of the IMU
-			self.settings = None
+			self.settings = 1
 			## length of the MTData message
-			self.length = None
+			self.length = 59
 			## header of the MTData message
-			self.header = None
+			self.header = '\xFA\xFF\x32'+chr(self.length)
 		if config_mode:
 			self.GoToConfig()
 
@@ -482,7 +490,6 @@ class MTDevice(object):
 			o = {}
 			# FIXME is it really 802y and 803y as in the doc?
 			if (data_id&0x00F0) == 0x20:	# Rate of Turn
-
 				o['gyrX'], o['gyrY'], o['gyrZ'] = \
 						struct.unpack('!'+3*ffmt, content)
 			elif (data_id&0x00F0) == 0x30:	# Delta Q
@@ -608,7 +615,7 @@ class MTDevice(object):
 		while data:
 			try:
 				data_id, size = struct.unpack('!HB', data[:3]) #unpack BigEndian UShort2 and UCar1 [start:end:increment]
-				#print hex(data_id),size,':',
+				# print hex(data_id),size,data_id&0x0003,':'
 				if (data_id&0x0003) == 0x3:
 					float_format = 'd'
 				elif (data_id&0x0003) == 0x0:
