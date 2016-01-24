@@ -12,6 +12,8 @@ echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", A
 ========================================================================================
 ROS Driver for XSens MT/MTi/MTi-G devices.
 
+Use the mtnode_new for the 4th generation Xsens such as MTi.
+
 Forked from:
 See: http://ros.org/wiki/ethzasl_xsens_driver
 
