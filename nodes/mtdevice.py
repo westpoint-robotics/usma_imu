@@ -578,13 +578,15 @@ class MTDevice(object):
                 o['ITOW'], o['year'], o['month'], o['day'], o['hour'], \
                 o['min'], o['sec'], o['valid'], o['tAcc'], o['nano'], \
                 o['gpsFix'], o['flags'], o['numSV'], reserv1, lon, \
-                lat, o['altEllipsoid'], o['altMSL'], o['Hacc'], o['Vacc'], \
+                lat, altEllipsoid, altMSL, o['Hacc'], o['Vacc'], \
                 o['Vel_N'], o['Vel_E'], o['Vel_D'], o['gspeed'], headMotRaw, \
                 o['Sacc'], o['Hacc'], headVehRaw, gdop, pdop, \
                 tdop, vdop, hdop, ndop, edop = \
                 struct.unpack('!IHBBBBBBIiBBBBiiiiIIiiiiiIIiHHHHHHH',content)
 
                 # Apply scaling to the data elements that require it 
+                o['altEllipsoid']=altEllipsoid/1000
+                o['altMSL']=altMSL/1000
                 headMot,headVeh=0.00001*headMotRaw,0.00001*headVehRaw
                 o['Lat'], o['Lon']=0.0000001*lat,0.0000001*lon
                 o['gDOP'], o['pDOP'], o['tDOP'], o['vDOP'], o['hDOP'], \
