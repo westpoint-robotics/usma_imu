@@ -12,7 +12,6 @@ from gps_common.msg import GPSFix, GPSStatus
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 import time
 
-
 # transform Euler angles or matrix into quaternions
 from math import pi, radians
 from tf.transformations import quaternion_from_matrix, quaternion_from_euler, identity_matrix
@@ -141,6 +140,7 @@ class XSensDriver(object):
 				# NED vel # TODO?
 				# Accuracy
 				# 2 is there to go from std_dev to 95% interval
+				print" raw gps"
 				self.xgps_msg.err_horz = 2*rawgps_data['Hacc']*1e-3
 				self.xgps_msg.err_vert = 2*rawgps_data['Vacc']*1e-3
 			self.old_bGPS = rawgps_data['bGPS']
@@ -460,6 +460,14 @@ class XSensDriver(object):
 				self.xgps_msg.altitude = self.gps_msg.altitude = o['altMSL']
 				self.xgps_msg.speed = o['gspeed']
 				self.pub_gps = True
+				self.xgps_msg.err_horz = 2*o['Hacc']*1e-3
+				self.xgps_msg.err_vert = 2*o['Vacc']*1e-3
+				self.xgps_msg.position_covariance[0]=(o['Hacc']*1e-3*0.5)*(o['Hacc']*1e-3*0.5)
+				self.xgps_msg.position_covariance[4]=self.xgps_msg.position_covariance[0]
+				self.xgps_msg.position_covariance[8] = (o['Vacc']*1e-3*0.5)*(o['Vacc']*1e-3*0.5)
+				self.gps_msg.position_covariance[0]=self.xgps_msg.position_covariance[0]
+				self.gps_msg.position_covariance[4]=self.xgps_msg.position_covariance[4]
+				self.gps_msg.position_covariance[8]=self.xgps_msg.position_covariance[8]
 			except KeyError:
 				pass
 			try:	# Time UTC

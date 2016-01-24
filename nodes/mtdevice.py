@@ -482,7 +482,6 @@ class MTDevice(object):
             o = {}
             # FIXME is it really 802y and 803y as in the doc?
             if (data_id&0x00F0) == 0x20:    # Rate of Turn
-
                 o['gyrX'], o['gyrY'], o['gyrZ'] = \
                         struct.unpack('!'+3*ffmt, content)
             elif (data_id&0x00F0) == 0x30:    # Delta Q
@@ -580,7 +579,7 @@ class MTDevice(object):
                 o['gpsFix'], o['flags'], o['numSV'], reserv1, lon, \
                 lat, altEllipsoid, altMSL, o['Hacc'], o['Vacc'], \
                 o['Vel_N'], o['Vel_E'], o['Vel_D'], o['gspeed'], headMotRaw, \
-                o['Sacc'], o['Hacc'], headVehRaw, gdop, pdop, \
+                o['Sacc'], o['HeadAcc'], headVehRaw, gdop, pdop, \
                 tdop, vdop, hdop, ndop, edop = \
                 struct.unpack('!IHBBBBBBIiBBBBiiiiIIiiiiiIIiHHHHHHH',content)
 
@@ -989,7 +988,7 @@ def main():
         if device=='auto':
             devs = find_devices()
             if devs:
-                print "Detected devices:","".join('\n    %s @ %d'%(d,p) for d,p in
+                print "Detected devices:","".join('\n\t%s @ %d'%(d,p) for d,p in
                         devs)
                 print "Using %s @ %d"%devs[0]
                 device, baudrate = devs[0]
