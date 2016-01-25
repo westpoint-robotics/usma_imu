@@ -6,9 +6,6 @@ sudo apt-get install libpcap0.8-dev
 sudo su
 echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", ATTRS{product}=="MTi-G-700 GPS/INS", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules
 
-    ATTRS{manufacturer}=="Xsens"
-    ATTRS{product}=="MTi-G-700 GPS/INS"
-
 ========================================================================================
 ROS Driver for XSens MT/MTi/MTi-G devices.
 
