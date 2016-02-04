@@ -29,8 +29,7 @@ def get_param(name, default):
 
 class XSensDriver(object):
 	
-	def __init__(self):
-		
+	def __init__(self):		
 		device = get_param('~device', 'auto')
 		baudrate = get_param('~baudrate', 0)
 		if device=='auto':

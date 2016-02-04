@@ -1,3 +1,4 @@
+<!-- USMA Xsens Fork -->
 <launch>
     <arg name="frame_id" default="/imu"/>
 
@@ -9,5 +10,8 @@
 
 		<param name="frame_local" value="$(arg frame_local)"/>
 		<param name="frame_local_imu" value="$(arg frame_local_imu)"/>
+
+        <param name="device" value="/dev/xsens"/>
+        <param name="baudrate" value="115200"/>
 	</node>
 </launch>
