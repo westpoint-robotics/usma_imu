@@ -2,7 +2,7 @@
 
 This package extends https://github.com/ethz-asl/ethzasl_xsens_driver.git. The extension allows the usage of the xsens 4th generation protocol. The xsens must be properly configured to work with either this package or the original package. If not properly configured the packages generates parsing errors and stops execution.
 
-Use the MT Manager Software to configure the the Mti-G-700 to these settings:
+Use the MT Manager Software to configure the Mti-G-700 to these settings:
 
 * Normal Mode
 * TimeStamp: check "Packet Counter", check "Sample Time Fine"
