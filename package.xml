@@ -1,5 +1,5 @@
 <package>
-  <name>xsens_driver</name>
+  <name>usma_imu</name>
   <version>1.0.3</version>
   <description>
   ROS Driver for XSens MT/MTi/MTi-G devices.
