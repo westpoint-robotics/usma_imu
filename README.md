@@ -30,15 +30,28 @@ To configure the xsens to work with the USMA version, use the MT Manager Softwar
 8. `cd ~/catkin_make`
 9. `catkin_make`
 
-This node publishes:
-/velocity  # just angular velocity
-/temperature
-/imu/data
+# To test the code.
+
+`roslaunch xsens_driver xsens_driver.launch`
+
+This node publishes the following topics, accuracy still needs to be verified on some:
+* /analog_in1	# Undetermined
+* /analog_in2	# Undetermined
+* /diagnostics  # Working
+* /fix  	# Working
+* /fix_extended # Working
+* /imu/data  	# Working
+* /imu_data_str # Working
+* /magnetic  	# Working
+* /pressure  	# NOT WORKING
+* /temperature  # Working
+* /velocity  	# Publishes angular velocities only
+
 
 ========================================================================================
 
-TODO: Not all the data coming from the device is published as a ROS Message. Need
+* TODO: Not all the data coming from the device is published as a ROS Message. Need
 to add more of it to the topics being published. This driver still needs more work
 to enable it to handle the various different configurations.
-TODO: Look to standardize on TF2 instead of TF. See: http://wiki.ros.org/tf2/Migration
+* TODO: Look to standardize on TF2 instead of TF. See: http://wiki.ros.org/tf2/Migration
 
