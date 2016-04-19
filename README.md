@@ -30,11 +30,11 @@ To configure the xsens to work with the USMA version, use the MT Manager Softwar
 8. `cd ~/catkin_make`
 9. `catkin_make`
 
-# To test the code.
+####  To test the code.
 
 `roslaunch xsens_driver xsens_driver.launch`
 
-This node publishes the following topics, accuracy still needs to be verified on some:
+##### This node publishes the following topics, accuracy still needs to be verified on some:
 * /analog_in1	# Undetermined
 * /analog_in2	# Undetermined
 * /diagnostics  # Working
