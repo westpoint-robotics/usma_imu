@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import serial
 import struct
-
+import rospy
 import sys, getopt, time, glob#, traceback
 
 from mtdef import MID, OutputMode, OutputSettings, MTException, Baudrates, XDIGroup, getName, getMIDName
@@ -19,7 +19,8 @@ class MTDevice(object):
     def __init__(self, port, baudrate=115200, timeout=0.1, autoconf=True, #Original Timeout is 0.002
             config_mode=False):
         """Open device."""
-        ## serial interface to the device
+        ## serial interface to the device        
+        rospy.loginfo("Connecting to port: %s, at baudrate : %d"%(port, baudrate)) 
         self.device = serial.Serial(port, baudrate, timeout=timeout,
                 writeTimeout=timeout)
         self.device.flushInput()    # flush to make sure the port is ready TODO
