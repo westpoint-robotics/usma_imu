@@ -1,5 +1,5 @@
 <!-- USMA Xsens Fork -->
-<launch>
+ <launch>
     <arg name="frame_id" default="/imu"/>
 
     <arg name="frame_local" default="ENU"/>
