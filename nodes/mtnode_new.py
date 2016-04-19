@@ -523,14 +523,11 @@ class XSensDriver(object):
 		# publish string representation
 		self.str_pub.publish(str(data))
 
-
-
 def main():
 	'''Create a ROS node and instantiate the class.'''
 	rospy.init_node('xsens_driver')
 	driver = XSensDriver()
 	driver.spin()
-
 
 if __name__== '__main__':
 	main()

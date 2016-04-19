@@ -1,8 +1,10 @@
 # usma_xsens
 
-This package extends https://github.com/ethz-asl/ethzasl_xsens_driver.git. The extension allows the usage of the xsens 4th generation protocol. The xsens must be properly configured to work with either this package or the original package. If not properly configured the packages generates parsing errors and stops execution.
+This package extends https://github.com/ethz-asl/ethzasl_xsens_driver.git, do not install this package. The extension allows the usage of the xsens 4th generation protocol. In the USMA extension of the code both mtnode.py and mtnode_new.py are kept and many of the conventions from the original source are kept. For our purpose we are interested in running the mtnode_new.py node.
 
-Use the MT Manager Software to configure the Mti-G-700 to these settings:
+The xsens must be properly configured to work with either this package or the original package. If not properly configured the packages generates parsing errors and stops execution.
+
+To configure the xsens to work with the USMA version, use the MT Manager Software to configure the Mti-G-700 to these settings:
 
 * Normal Mode
 * TimeStamp: check "Packet Counter", check "Sample Time Fine"
@@ -28,9 +30,15 @@ Use the MT Manager Software to configure the Mti-G-700 to these settings:
 8. `cd ~/catkin_make`
 9. `catkin_make`
 
+This node publishes:
+/velocity  # just angular velocity
+/temperature
+/imu/data
+
 ========================================================================================
 
 TODO: Not all the data coming from the device is published as a ROS Message. Need
 to add more of it to the topics being published. This driver still needs more work
 to enable it to handle the various different configurations.
+TODO: Look to standardize on TF2 instead of TF. See: http://wiki.ros.org/tf2/Migration
 
