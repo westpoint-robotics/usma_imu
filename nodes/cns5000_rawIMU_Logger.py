@@ -5,6 +5,13 @@ import struct
 import sys
 import datetime
 
+'''
+udev rule settings for the CNS 5000 and flexpak6
+SUBSYSTEM=="tty", ATTRS{idProduct}=="2303", ATTRS{idVendor}=="067b", ATTRS{product}=="USB-Serial Controller", SYMLINK+="raw_imu"
+SUBSYSTEM=="tty", ATTRS{idProduct}=="2303", ATTRS{idVendor}=="067b", ATTRS{product}=="USB-Serial Controller D", SYMLINK+="raw_gps"
+SUBSYSTEM=="tty", ATTRS{idProduct}=="0100", ATTRS{idVendor}=="09d7", SYMLINK+="flex6_gps"
+'''
+
 def wrapTo2PI(theta):
     '''Normalize an angle in radians to [0, 2*pi]
     '''
@@ -33,7 +40,7 @@ def CehckCRC(data):
 if __name__ == '__main__':
     global KVH_IMU
     global SerialData
-    KVH_IMUport = '/dev/ttyUSB0'
+    KVH_IMUport = '/dev/raw_imu'
     KVH_IMUrate = 115200
     CRC_error_limits   =10.0
     CRC_errorcounter=0
@@ -65,7 +72,7 @@ if __name__ == '__main__':
 
     dataSynced=False
     data=""
-    with open("kvh_RawImu.csv", 'w') as outfile:
+    with open("cns5000_RawImu.csv", 'w') as outfile:
         outString = "Xangle, Yangle, Zangle,Xvelocity,Yvelocity,Zvelocity,Odometer,Status,Sequence\n"
         outfile.write(outString)
         print(outString)
