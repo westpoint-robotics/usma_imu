@@ -1,0 +1,26 @@
+<!-- USMA Xsens Fork -->
+ <launch>
+    <arg name="frame_id" default="imu_frame"/>
+
+    <arg name="frame_local" default="ENU"/>
+    <arg name="frame_local_imu" default="ENU"/>
+
+	<node pkg="xsens_driver" type="mtnode_logger.py" name="mti700_logger" output="screen" >
+		<param name="frame_id" value="$(arg frame_id)"/>
+		<param name="frame_local" value="$(arg frame_local)"/>
+		<param name="frame_local_imu" value="$(arg frame_local_imu)"/>
+		<param name="fname" value="/home/user1/Data/mti700.csv"/>
+        
+        	<remap from="/fix" to="/gps/fix"/>   
+	        <remap from="/imu/data" to="/imu/raw"/> 
+        	<param name="device" value="/dev/mti700"/>
+        	<param name="baudrate" value="115200"/>
+	</node>
+
+	<node pkg="xsens_driver" type="kvh_inspvaa.py" name="inspvaa" output="screen" />
+
+	<node pkg="xsens_driver" type="kvh_rawIMU.py" name="rawIMU" output="screen" />
+
+	<node pkg="xsens_driver" type="oem6_bestpos.py" name="flex6_gps" output="screen" />
+    
+</launch>
