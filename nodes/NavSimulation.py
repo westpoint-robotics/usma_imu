@@ -7,7 +7,7 @@ import os
 import time
 from LatLongUTMconversion import LLtoUTM
 
-datafolder = "/home/user1/Data/circle01/"
+datafolder = "/home/user1/Data/trial01/"
 
 FLAG_inspvafile = True
 FLAG_bestposfile = True
@@ -50,7 +50,7 @@ if (os.path.isfile(fname) == False):
 else:
     print("Found file: " + fname)
 
-inspvaArray = []
+cnsBestPosArray = []
 cnsBestPosArray = []
 if (FLAG_bestposfile):
     with open(fname,'rb') as infile: #Read in data from this file
@@ -94,6 +94,7 @@ if (FLAG_xSensfile):
         for line in dictfile:
             if 'Lat' in line:
                 mti700Array.append(eval(line))
+
 '''
 plt.ion()
 (zone,e,n)=LLtoUTM(23, 41.38231066666667,-73.97545914722222)  
@@ -111,7 +112,7 @@ plt.pause(1000)
 '''
 initeast=-1
 initnorth=-1
-plt.ion()
+plt.ion() # This command enables interactive plotting
 if(FLAG_inspvafile):
     strTime=inspvaArray[0][6]
     endTime=inspvaArray[-1][6]
@@ -121,46 +122,54 @@ if(FLAG_inspvafile):
 
     for row in inspvaArray:
         #Convert to UTM for meters and zero out location
-        (zone,easting,northing)=LLtoUTM(23, float(row[11]),float(row[12]))
+        (zone,easting,northing)=LLtoUTM(23, float(row[12]),float(row[13]))
         if -1==initeast:
             initeast=easting
             initnorth=northing
         easting=easting-initeast
         northing=northing-initnorth
+        plt.plot(easting,northing,'r.')
 
-        #print row[6],"cns5000"
-        # Plot FlexPack 6 grids if its time to plot
-        print row[6],flex6_gpsArray[i][6], len(flex6_gpsArray)
-        while ((row[6] <= flex6_gpsArray[i][6]) and (i < len(flex6_gpsArray))):
-            print flex6_gpsArray[i][6],"flex6"
-            (zone,e,n)=LLtoUTM(23, float(flex6_gpsArray[i][11]),float(flex6_gpsArray[i][12]))    
-            e=e-initeast
-            n=n-initnorth
-            plt.plot(e,n,'g.')
-            i = i + 1
+        if(FLAG_gpsArray):
+            # Plot FlexPack 6 grids if its time to plot
+            print row[6],flex6_gpsArray[i][6], len(flex6_gpsArray)
+            while ((row[6] <= flex6_gpsArray[i][6]) and (i < len(flex6_gpsArray))):
+                print flex6_gpsArray[i][6],"flex6"
+                (zone,e,n)=LLtoUTM(23, float(flex6_gpsArray[i][11]),float(flex6_gpsArray[i][12]))    
+                e=e-initeast
+                n=n-initnorth
+                plt.plot(e,n,'g.')
+                #plt.pause(0.0001)
+                i = i + 1
             
 
-        # Plot Xsens Mti700 grids if its time to plot
-        mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
-        while ((float(row[6]) >= mtiTime) and (j < len(mti700Array))):    
+        if(FLAG_xSensfile):
+            # Plot Xsens Mti700 grids if its time to plot
             mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
-            #print mtiTime,"mti700"
-            (zone,e,n)=LLtoUTM(23, float(mti700Array[j]['GNSS']['Lat']),float(mti700Array[j]['GNSS']['Lon']))    
-            e=e-initeast
-            n=n-initnorth
-            plt.plot(e,n,'y*')
-            j = j + 1
+            while ((float(row[6]) >= mtiTime) and (j < len(mti700Array))):    
+                mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
+                #print mtiTime,"mti700"
+                (zone,e,n)=LLtoUTM(23, float(mti700Array[j]['GNSS']['Lat']),float(mti700Array[j]['GNSS']['Lon']))    
+                e=e-initeast
+                n=n-initnorth
+                plt.plot(e,n,'y.')
+                j = j + 1
+        
+        #plt.pause(0.000001) # this line slows down animation
 
-
+        '''
         if ('#BESTGNSSPOSA'not in row):
             plt.plot(easting,northing,'b.')
         else :
             plt.plot(easting,northing,'r.')
-        plt.pause(0.0015)
+        #plt.pause(0.0015)'''
+
+plt.waitforbuttonpress(timeout=-1)
 '''
 
 # CNS-5000 example output of INSPVAA
-#['#INSPVAA', 'COM1', '0', '74.0', 'FINESTEERING', '2925', '422253.200', '00004000', '54e2', '13755;2925', '422253.200000000', '41.39487928080', '-73.95503528503', '20.4832', '0.0108', '-0.0366', '0.0443', '-1.264627312', '0.225483144', '181.617995165', 'INS_SOLUTION_GOOD', '75aea8bb\r\n']
+['#INSPVAA', 'COM1', '0', '68.5', 'FINESTEERING', '2946', '162546.600', '00080000', '54e2', '13742', '2946', '162546.600000000', '41.39124157925', '-73.95395726549', '15.4528', '-0.1844', '-0.0883', '0.1638', '0.000000000', '0.000000000', '0.000000000', 'INS_ALIGNING*e4d0fd5c\r\n']
+
 
 # FlexPak6 example output:
 #['#BESTPOSA', 'USB2', '0', '86.0', 'FINESTEERING', '1901', '422235.000', '00040000', '7145', '10985;SOL_COMPUTED', 'WAAS', '41.39489439713', '-73.95505065150', '48.9009', '-32.2000', 'WGS84', '1.4642', '1.0299', '2.9375', '"133"', '7.000', '0.000', '10', '7', '7', '7', '0', '06', '00', '03', '7beb228b\r\n']

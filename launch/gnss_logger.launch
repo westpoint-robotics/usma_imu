@@ -17,10 +17,10 @@
         	<param name="baudrate" value="115200"/>
 	</node>
 
-	<node pkg="xsens_driver" type="kvh_inspvaa.py" name="inspvaa" output="screen" />
+	
 
-	<node pkg="xsens_driver" type="kvh_rawIMU.py" name="rawIMU" output="screen" />
+	<!-- <node pkg="xsens_driver" type="cns5000_rawIMU_Logger.py" name="rawIMU" output="screen" /> --> 
 
-	<node pkg="xsens_driver" type="oem6_bestpos.py" name="flex6_gps" output="screen" />
+	<node pkg="xsens_driver" type="cns5000_GNSS_Logger.py" name="CNS5000_GNSS" output="screen" />
     
 </launch>
