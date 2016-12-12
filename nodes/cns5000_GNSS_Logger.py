@@ -26,6 +26,7 @@ ser.open()
 ser.write('unlogall\r\n')
 ser.write('LOG COM1 INSPVAA ONTIME 0.2\r\n')
 ser.write('LOG COM1 BESTPOSA ONTIME 1\r\n')
+ser.write('LOG COM1 PPPPOSA ONTIME 1\r\n')
 dataDir = "/home/user1/Data/"
 
 
