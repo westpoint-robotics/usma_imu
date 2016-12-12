@@ -7,7 +7,7 @@ import os
 import time
 from LatLongUTMconversion import LLtoUTM
 
-datafolder = "/home/user1/Data/trial01/"
+datafolder = "/home/user1/Data/moving test #4 rounded turns, 17NOV16 (1lap)/"
 
 FLAG_inspvafile = True
 FLAG_bestposfile = True
@@ -113,56 +113,59 @@ plt.pause(1000)
 initeast=-1
 initnorth=-1
 plt.ion() # This command enables interactive plotting
+dataDir = "/home/user1/Data/"
 if(FLAG_inspvafile):
-    strTime=inspvaArray[0][6]
-    endTime=inspvaArray[-1][6]
-    #print strTime,endTime,mti700Array[0]['GNSS']['ITOW']
-    i =0
-    j=0
+    with open(dataDir+"Nav_delta.csv", 'w') as deltafile:
+        strTime=inspvaArray[0][6]
+        endTime=inspvaArray[-1][6]
+        #print strTime,endTime,mti700Array[0]['GNSS']['ITOW']
+        i =0
+        j=0
 
-    for row in inspvaArray:
-        #Convert to UTM for meters and zero out location
-        (zone,easting,northing)=LLtoUTM(23, float(row[12]),float(row[13]))
-        if -1==initeast:
-            initeast=easting
-            initnorth=northing
-        easting=easting-initeast
-        northing=northing-initnorth
-        plt.plot(easting,northing,'r.')
-
-        if(FLAG_gpsArray):
-            # Plot FlexPack 6 grids if its time to plot
-            print row[6],flex6_gpsArray[i][6], len(flex6_gpsArray)
-            while ((row[6] <= flex6_gpsArray[i][6]) and (i < len(flex6_gpsArray))):
-                print flex6_gpsArray[i][6],"flex6"
-                (zone,e,n)=LLtoUTM(23, float(flex6_gpsArray[i][11]),float(flex6_gpsArray[i][12]))    
-                e=e-initeast
-                n=n-initnorth
-                plt.plot(e,n,'g.')
-                #plt.pause(0.0001)
-                i = i + 1
-            
-
-        if(FLAG_xSensfile):
-            # Plot Xsens Mti700 grids if its time to plot
-            mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
-            while ((float(row[6]) >= mtiTime) and (j < len(mti700Array))):    
-                mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
-                #print mtiTime,"mti700"
-                (zone,e,n)=LLtoUTM(23, float(mti700Array[j]['GNSS']['Lat']),float(mti700Array[j]['GNSS']['Lon']))    
-                e=e-initeast
-                n=n-initnorth
-                plt.plot(e,n,'y.')
-                j = j + 1
-        
-        #plt.pause(0.000001) # this line slows down animation
-
-        '''
-        if ('#BESTGNSSPOSA'not in row):
-            plt.plot(easting,northing,'b.')
-        else :
+        for row in inspvaArray:
+            #Convert to UTM for meters and zero out location
+            (zone,easting,northing)=LLtoUTM(23, float(row[12]),float(row[13]))
+            if -1==initeast:
+                initeast=easting
+                initnorth=northing
+            easting=easting-initeast
+            northing=northing-initnorth
             plt.plot(easting,northing,'r.')
-        #plt.pause(0.0015)'''
+
+            if(FLAG_gpsArray):
+                # Plot FlexPack 6 grids if its time to plot
+                print row[6],flex6_gpsArray[i][6], len(flex6_gpsArray)
+                while ((row[6] <= flex6_gpsArray[i][6]) and (i < len(flex6_gpsArray))):
+                    print flex6_gpsArray[i][6],"flex6"
+                    (zone,e,n)=LLtoUTM(23, float(flex6_gpsArray[i][11]),float(flex6_gpsArray[i][12]))    
+                    e=e-initeast
+                    n=n-initnorth
+                    plt.plot(e,n,'g.')
+                    #plt.pause(0.0001)
+                    i = i + 1
+                
+
+            if(FLAG_xSensfile):
+                # Plot Xsens Mti700 grids if its time to plot
+                mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
+                while ((float(row[6]) >= mtiTime) and (j < len(mti700Array))):    
+                    mtiTime=(mti700Array[j]['GNSS']['ITOW'])/1000.0      
+                    #print mtiTime,"mti700"
+                    (zone,e,n)=LLtoUTM(23, float(mti700Array[j]['GNSS']['Lat']),float(mti700Array[j]['GNSS']['Lon']))    
+                    e=e-initeast
+                    n=n-initnorth
+                    plt.plot(e,n,'y.')
+                    j = j + 1
+                    outstring = (str(e-easting) + "," + str(n-northing)+"\n")
+                    deltafile.write (outstring)
+            #plt.pause(0.000001) # this line slows down animation
+
+            '''
+            if ('#BESTGNSSPOSA'not in row):
+                plt.plot(easting,northing,'b.')
+            else :
+                plt.plot(easting,northing,'r.')
+            #plt.pause(0.0015)'''
 
 plt.waitforbuttonpress(timeout=-1)
 '''
