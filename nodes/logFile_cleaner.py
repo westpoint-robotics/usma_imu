@@ -18,10 +18,13 @@ try:
     with open(dataDir+"cleaned_totalLog.csv", 'w') as cleanfile, open(dataDir+"totalLog.log","r") as totalLog:
         printable = set(string.printable)
         for line in totalLog:
-            outString = filter(lambda x: x in printable, line)
+            line=line.split('#')
+            if (len(line))>1:
+                print (line[1]+"\n")
+            #outString = filter(lambda x: x in printable, line)
             #outString = ''.join([i if ord(i) < 128 else ' ' for i in line])
-            print(outString + "\n")
-            cleanfile.write(outString)
+            #print(outString + "\n")
+            #cleanfile.write(outString)
         
 
 except (KeyboardInterrupt, SystemExit):

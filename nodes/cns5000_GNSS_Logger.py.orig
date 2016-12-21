@@ -28,8 +28,11 @@ ser.write('ASSIGNLBANDBEAM AUTO\r\n')
 ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
 ser.write('LOG COM1 BESTPOSA ONTIME 1\r\n')
 ser.write('LOG COM1 PPPPOSA ONTIME 1\r\n')
+<<<<<<< HEAD
+=======
 ser.write('LOG COM1 GPGSA ONTIME 1\r\n')
 ser.write('LOG COM1 GPGSV ONTIME 1\r\n')
+>>>>>>> 872c8a82a70afff41475601521dba80d279d568b
 dataDir = "/home/user1/Data/"
 
 
