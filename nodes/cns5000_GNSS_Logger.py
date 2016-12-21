@@ -24,8 +24,12 @@ ser.open()
 
 # Send commands to CNS-5000 to start the logs
 ser.write('unlogall\r\n')
-ser.write('LOG COM1 INSPVAA ONTIME 0.2\r\n')
+ser.write('ASSIGNLBANDBEAM AUTO\r\n')
+ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
 ser.write('LOG COM1 BESTPOSA ONTIME 1\r\n')
+ser.write('LOG COM1 PPPPOSA ONTIME 1\r\n')
+ser.write('LOG COM1 GPGSA ONTIME 1\r\n')
+ser.write('LOG COM1 GPGSV ONTIME 1\r\n')
 dataDir = "/home/user1/Data/"
 
 
@@ -50,11 +54,12 @@ try:
                 new_output=kvh5000_output.replace(";",",")
 
                 if (kvh5000_output.split(",")[0] == "#INSPVAA"): # check if this the INSPVA message                    
-                    inspvafile.write(new_output) # Option to log data to file
-                    print(new_output),            
+                    #inspvafile.write(new_output) # Option to log data to file
+                    #print(new_output),            
+                    pass
 
                 if (kvh5000_output.split(",")[0] == "#BESTPOSA"): # check if this the BESTGPSPOSA message
-                    bestposfile.write(new_output) 
+                    #bestposfile.write(new_output) 
                     print(new_output),
 
 except (KeyboardInterrupt, SystemExit):
