@@ -33,7 +33,10 @@ To configure the xsens to work with the USMA version, use the MT Manager Softwar
 
 ####  To test the code.
 
-`roslaunch xsens_driver xsens_driver.launch`
+* For the MTI700:
+`roslaunch xsens_driver mti700.launch`
+* For the MTI300:
+`roslaunch xsens_driver mti300.launch`
 
 ##### This node publishes the following topics, accuracy still needs to be verified on some:
 * /analog_in1	# Undetermined
