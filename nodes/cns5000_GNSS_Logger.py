@@ -24,12 +24,19 @@ ser.open()
 
 # Send commands to CNS-5000 to start the logs
 ser.write('unlogall\r\n')
+time.sleep(0.03)
 ser.write('ASSIGNLBANDBEAM AUTO\r\n')
+time.sleep(0.03)
 ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
+time.sleep(0.03)
 ser.write('LOG COM1 BESTPOSA ONTIME 1\r\n')
+time.sleep(0.03)
 ser.write('LOG COM1 PPPPOSA ONTIME 1\r\n')
+time.sleep(0.03)
 ser.write('LOG COM1 GPGSA ONTIME 1\r\n')
+time.sleep(0.03)
 ser.write('LOG COM1 GPGSV ONTIME 1\r\n')
+time.sleep(0.03)
 dataDir = "/home/user1/Data/"
 
 

@@ -11,7 +11,7 @@
 		<param name="frame_local_imu" value="$(arg frame_local_imu)"/>
         	<remap from="/fix" to="/gps/fix"/>   
 	        <remap from="/imu/data" to="/imu/raw"/> 
-        	<param name="device" value="/dev/ttyUSB0"/>
+        	<param name="device" value="/dev/mti300"/>
         	<param name="baudrate" value="115200"/>
 	</node>
 </launch>
