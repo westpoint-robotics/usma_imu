@@ -24,15 +24,22 @@ To configure the xsens to work with the USMA version, use the MT Manager Softwar
 2. `git clone https://github.com/westpoint-robotics/usma_xsens.git`
 3. `sudo apt-get install ros-indigo-gps-common libpcap0.8-dev`
 4. `sudo su`
-5. `echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", ATTRS{product}=="MTi-G-700 GPS/INS", SYMLINK+="xsens", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules`
-6. `udevadm control --reload-rules`
-7. `exit`
-8. `cd ~/catkin_make`
-9. `catkin_make`
+5. `echo 'SUBSYSTEM=="tty", ATTRS{idProduct}=="0017", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", SYMLINK+="mti700", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules`
+6. `echo 'SUBSYSTEM=="tty", ATTRS{idProduct}=="0003", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", SYMLINK+="mti300", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules`
+7. `udevadm control --reload-rules`
+8. `exit`
+9. `cd ~/catkin_make`
+10. `catkin_make`
 
 ####  To test the code.
 
-`roslaunch xsens_driver xsens_driver.launch`
+* For the MTI700:
+
+`roslaunch xsens_driver mti700.launch`
+
+* For the MTI300:
+
+`roslaunch xsens_driver mti300.launch`
 
 ##### This node publishes the following topics, accuracy still needs to be verified on some:
 * /analog_in1	# Undetermined

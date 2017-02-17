@@ -27,9 +27,13 @@ ser.open()
 ser.write('unlogall\r\n')
 time.sleep(0.03)
 ser.write('ASSIGNLBANDBEAM AUTO\r\n')
-time.sleep(0.03)
+<<<<<<< HEAD
 #ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
+=======
 time.sleep(0.03)
+ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
+time.sleep(0.03)
+>>>>>>> 34e119838d621111ae3aff576f9235f2dac05f5e
 ser.write('LOG COM1 BESTPOSA ONTIME 1\r\n')
 time.sleep(0.03)
 ser.write('LOG COM1 PPPPOSA ONTIME 1\r\n')
