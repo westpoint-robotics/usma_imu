@@ -7,7 +7,7 @@ import os
 import time
 from LatLongUTMconversion import LLtoUTM
 
-datafolder = "/home/user1/Data/moving test #4 rounded turns, 17NOV16 (1lap)/"
+datafolder = "/home/user1/Data/IGGY1/"
 
 FLAG_inspvafile = True
 FLAG_bestposfile = True

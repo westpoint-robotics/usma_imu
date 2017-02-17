@@ -12,7 +12,8 @@ SUBSYSTEM=="tty", ATTRS{idProduct}=="0100", ATTRS{idVendor}=="09d7", SYMLINK+="f
 # TODO rename these devices. raw_gps is not accurate name, this the cns5000 ins device.
 ser = serial.Serial(
     port='/dev/raw_gps',
-    baudrate=115200, #8N1
+    #baudrate=115200, #8N1
+    baudrate=9600, #8N1
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS
@@ -25,7 +26,7 @@ ser.open()
 # Send commands to CNS-5000 to start the logs
 ser.write('unlogall\r\n')
 ser.write('ASSIGNLBANDBEAM AUTO\r\n')
-ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
+#ser.write('LOG COM1 INSPVAA ONTIME 1\r\n')
 ser.write('LOG COM1 BESTPOSA ONTIME 1\r\n')
 ser.write('LOG COM1 PPPPOSA ONTIME 1\r\n')
 ser.write('LOG COM1 GPGSA ONTIME 1\r\n')
