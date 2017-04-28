@@ -3,7 +3,6 @@ import serial
 import struct
 import rospy
 import sys, getopt, time, glob#, traceback
-
 from mtdef import MID, OutputMode, OutputSettings, MTException, Baudrates, XDIGroup, getName, getMIDName
 
 # Verbose flag for debugging
@@ -433,10 +432,7 @@ class MTDevice(object):
             o = {}
             if (data_id&0x00F0) == 0x10:    # Quaternion
                 #o['Q0'], o['Q1'], o['Q2'], o['Q3'] = struct.unpack('!'+4*ffmt, content)
-                orientationArray = struct.unpack('!'+4*ffmt, content)
-                # DML additions to normalize the quaternion
-                quat = np.array(orientationArray)                    
-                o['Q0'], o['Q1'], o['Q2'], o['Q3'] = quat / np.sqrt(np.dot(quat, quat))
+                o['Q0'], o['Q1'], o['Q2'], o['Q3']  = struct.unpack('!'+4*ffmt, content)
             elif (data_id&0x00F0) == 0x20:    # Rotation Matrix
                 o['a'], o['b'], o['c'], o['d'], o['e'], o['f'], o['g'], o['h'],\
                         o['i'] = struct.unpack('!'+9*ffmt, content)
@@ -718,10 +714,7 @@ class MTDevice(object):
                     data = data[36:]
                     o['matrix'] = ((a, b, c), (d, e, f), (g, h, i))
                 else: # OutputSettings.OrientMode_Quaternion:
-                    orientationArray = struct.unpack('!4f', data[:16])
-                    # DML Next two lines additions to normalize the quaternion
-                    quat = np.array(orientationArray)                    
-                    q0, q1, q2, q3 = quat / np.sqrt(np.dot(quat, quat))
+                    q0, q1, q2, q3 = struct.unpack('!4f', data[:16])
                     data = data[16:]
                     o['quaternion'] = (q0, q1, q2, q3)
                 output['Orient'] = o

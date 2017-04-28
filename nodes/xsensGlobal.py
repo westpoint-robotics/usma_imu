@@ -12,6 +12,7 @@ from std_msgs.msg import Float32
 from sensor_msgs.msg import NavSatFix, Imu
 from geometry_msgs.msg import PoseWithCovarianceStamped, Quaternion, Twist, Vector3Stamped
 from nav_msgs.msg import Odometry
+import numpy
 
 class MagHeading():
     def __init__(self):
@@ -177,6 +178,9 @@ class MagHeading():
                 self.magHdg_pub.publish(angles[0])
                 worldImu= self.mImu
                 #worldImu.orientation.x,worldImu.orientation.y,worldImu.orientation.z,worldImu.orientation.w = tf.transformations.quaternion_from_euler(angles[5], angles[4], angles[3])
+                #DML the following 2 lines aded to normalize the quaternion 
+                quat = numpy.array([worldImu.orientation.x,worldImu.orientation.y,worldImu.orientation.z,worldImu.orientation.w])
+                worldImu.orientation.x,worldImu.orientation.y,worldImu.orientation.z,worldImu.orientation.w=quat / numpy.sqrt(numpy.dot(quat, quat))
                 self.br.sendTransform((0,0,0),(worldImu.orientation.x,worldImu.orientation.y,worldImu.orientation.z,worldImu.orientation.w),rospy.Time.now(),imu_frame, world_frame)
  
                 self.world_imu_pub.publish(worldImu)

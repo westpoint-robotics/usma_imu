@@ -11,6 +11,7 @@ from geometry_msgs.msg import TwistStamped, Vector3Stamped
 from gps_common.msg import GPSFix, GPSStatus
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 import time, struct
+import numpy
 
 # transform Euler angles or matrix into quaternions
 from math import pi, radians
@@ -201,7 +202,12 @@ class XSensDriver(object):
             elif orient_data.has_key('matrix'):
                 m = identity_matrix()
                 m[:3,:3] = orient_data['matrix']
-                x, y, z, w = quaternion_from_matrix(m)
+                x,y,z,w = quaternion_from_matrix(m)
+
+            # DML Next two lines additions to normalize the quaternion
+            quat = numpy.array([x,y,z,w])                    
+            x,y,z,w = quat / numpy.sqrt(numpy.dot(quat, quat))
+
             self.imu_msg.orientation.x = x
             self.imu_msg.orientation.y = y
             self.imu_msg.orientation.z = z
@@ -304,6 +310,9 @@ class XSensDriver(object):
                 x, y, z, w = quaternion_from_matrix(m)
             except KeyError:
                 pass
+            # DML Next two lines additions to normalize the quaternion            
+            quat = numpy.array([x, y, z, w])                    
+            x, y, z, w = quat / numpy.sqrt(numpy.dot(quat, quat))
             self.imu_msg.orientation.x = x
             self.imu_msg.orientation.y = y
             self.imu_msg.orientation.z = z

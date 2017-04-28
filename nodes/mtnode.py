@@ -16,7 +16,7 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from math import pi, radians
 from tf.transformations import quaternion_from_matrix, quaternion_from_euler, identity_matrix
 
-import numpy
+import numpy 
 
 def get_param(name, default):
 	try:
