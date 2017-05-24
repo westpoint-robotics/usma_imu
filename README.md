@@ -2,23 +2,22 @@
 
 This package extends https://github.com/ethz-asl/ethzasl_xsens_driver.git, do not install this package. The extension allows the usage of the xsens 4th generation protocol. In the USMA extension of the code both mtnode.py and mtnode_new.py are kept and many of the conventions from the original source are kept. For our purpose we are interested in running the mtnode_new.py node.
 
-The xsens must be properly configured to work with either this package or the original package. If not properly configured the packages generates parsing errors and stops execution.
-
-To initialize Xsens MTiG-710 for the first time, use the MT Manager Software on Windows or Ubuntu.
-Click on the icon with a lightning and wrench symbol ("Show the output configuration options for the selected device") and in the pop-up windown, configure the following settings:
+#### Initial Configuration
+* The xsens must be properly configured to work with either this package or the original package. If not properly configured the packages generates parsing errors and stops execution.
+* To initialize Xsens MTiG-710 for the first time, use the MT Manager Software on Windows or Ubuntu.
+* Click on the icon with a lightning and wrench symbol ("Show the output configuration options for the selected device") and in the pop-up windown, configure the following settings:
 ![alt text](https://github.com/westpoint-robotics/usma_xsens/blob/master/MT-Manager.png)
-* Normal Mode
-* TimeStamp: check "Packet Counter", check "Sample Time Fine"
-* Orientation: Quaternion,Floating Point 32-bit, 100hz
-* Inertial Data: 	check "Rate of Turn, Floating Point 32-bit, 100hz
-				check "deltaV", check "Acceleration"
-* Magnetic field: check "Magnetic Field", Floating Point 32-bit, 100hz
-* Temperature: check "Temperature", Floating Point 32-bit, 100hz
-* Pressure: check "Barometric Pressure", Floating Point 32-bit, 100hz
-* Sensor Component Readout: All blank.
-* Status: check "Status Word"
-* Position and Velocity: All blank.
-* GNSS Data: check "Pvt Data", check SatInfo, 4hz
+1. Normal Mode
+2. TimeStamp: check "Packet Counter", check "Sample Time Fine"
+3. Orientation: Quaternion,Floating Point 32-bit, 100hz
+4. Inertial Data: check "Rate of Turn, Floating Point 32-bit, 100hz. check "deltaV", check "Acceleration"
+5. Magnetic field: check "Magnetic Field", Floating Point 32-bit, 100hz
+6. Temperature: check "Temperature", Floating Point 32-bit, 100hz
+7. Pressure: check "Barometric Pressure", Floating Point 32-bit, 100hz
+8. Sensor Component Readout: All blank.
+9. Status: check "Status Word"
+10. Position and Velocity: All blank.
+11. GNSS Data: check "Pvt Data", check SatInfo, 4hz
 
 #### Install umsa_xsens if using the xsens IMU/GPS.
 1. `cd ~/catkin_ws/src`
