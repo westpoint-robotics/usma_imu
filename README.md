@@ -5,7 +5,7 @@ This package extends https://github.com/ethz-asl/ethzasl_xsens_driver.git, do no
 #### Initial Configuration
 * The xsens must be properly configured to work with either this package or the original package. If not properly configured the packages generates parsing errors and stops execution.
 * To initialize Xsens MTiG-710 for the first time, use the MT Manager Software on Windows or Ubuntu.
-* Click on the icon with a lightning and wrench symbol ("Show the output configuration options for the selected device") and in the pop-up windown, configure the following settings:
+* Click on the icon with a lightning and wrench symbol ("Show the output configuration options for the selected device") and in the pop-up window, configure the following settings:
 ![alt text](https://github.com/westpoint-robotics/usma_xsens/blob/master/MT-Manager.png)
 1. Normal Mode
 2. TimeStamp: check "Packet Counter", check "Sample Time Fine"
