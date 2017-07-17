@@ -28,7 +28,7 @@ This package extends https://github.com/ethz-asl/ethzasl_xsens_driver.git, do no
 6. `echo 'SUBSYSTEM=="tty", ATTRS{idProduct}=="0003", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", SYMLINK+="mti300", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules`
 7. `udevadm control --reload-rules`
 8. `exit`
-9. `cd ~/catkin_make`
+9. `cd ~/catkin_ws`
 10. `catkin_make`
 
 ####  To test the code.
